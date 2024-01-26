@@ -1,0 +1,82 @@
+version: "3"
+services:
+  producer:
+    container_name: producerapp
+    build:
+      context: .
+      dockerfile: Dockerfile.producer
+    ports:
+      - "7000:7000"
+    volumes:
+      - ./producer:/producer
+    command: >
+      sh -c "
+      python manage.py runserver 0.0.0.0:7000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PASS=supersecretpassword
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - CORS_ALLOW_ALL_ORIGINS=1
+      - DEBUG=1
+      - POPULATE_DATA= 1
+    depends_on:
+      - db
+    networks:
+      - producer-network
+
+  db:
+    container_name: dbproducer
+    image: postgres:10-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: supersecretpassword
+    networks:
+      - producer-network
+
+  consumer:
+    container_name: consumerapp
+    build:
+      context: .
+      dockerfile: Dockerfile.consumer
+    volumes:
+      - ./consumer:/consumer
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "
+      python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DB_HOST=dbconsumer
+      - DB_NAME=app
+      - DB_USER=postgres
+      - DB_PORT=5433
+      - DB_PASS=supersecretpassword
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - CORS_ALLOW_ALL_ORIGINS=1
+      - DEBUG=1
+      - POPULATE_DATA= 1
+    depends_on:
+      - dbconsumer
+    networks:
+      - consumer-network
+
+  dbconsumer:
+      container_name: dbconsumer
+      image: postgres:10-alpine
+      environment:
+        POSTGRES_DB: app
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: supersecretpassword
+      networks:
+        - consumer-network
+
+
+networks:
+  producer-network:
+  consumer-network:
+
+volumes:
+  static_data:
