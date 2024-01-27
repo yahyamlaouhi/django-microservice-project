@@ -9,6 +9,8 @@ django-cors-headers>=3.9.0,<3.10.1
 django-phonenumber-field[phonenumbers]==6.1.0
 django-address==0.2.6
 django-rest-auth>=0.9.4
+djangorestframework-api-key>=3.0.0
+
 
 flake8>=3.9.0,<4.0.1
 black==22.3.0

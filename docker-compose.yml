@@ -10,7 +10,8 @@ services:
     volumes:
       - ./producer:/producer
     command: >
-      sh -c "
+      sh -c "python manage.py makemigrations users &&
+      python manage.py migrate &&
       python manage.py runserver 0.0.0.0:7000"
     environment:
       - DB_HOST=db
@@ -21,6 +22,7 @@ services:
       - CORS_ALLOW_ALL_ORIGINS=1
       - DEBUG=1
       - POPULATE_DATA= 1
+      - api-key = bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
     depends_on:
       - db
     networks:
@@ -46,7 +48,7 @@ services:
     ports:
       - "8000:8000"
     command: >
-      sh -c "
+      sh -c "python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
     environment:
       - DB_HOST=dbconsumer
@@ -58,6 +60,8 @@ services:
       - CORS_ALLOW_ALL_ORIGINS=1
       - DEBUG=1
       - POPULATE_DATA= 1
+      - api-key = bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
+
     depends_on:
       - dbconsumer
     networks:
