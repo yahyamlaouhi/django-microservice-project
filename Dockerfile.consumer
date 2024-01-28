@@ -1,4 +1,4 @@
-FROM python:3.9-alpine
+FROM python:3.8-alpine
 LABEL maintainer="consumer"
 
 ENV PYTHONUNBUFFERED 1
@@ -7,6 +7,8 @@ ENV PATH="/scripts:${PATH}"
 RUN pip install --upgrade pip
 
 COPY ./requirements_consumer.txt /requirements_consumer.txt
+RUN apk add --update --no-cache rabbitmq-c rabbitmq-c-dev
+RUN PATH=$PATH:/usr/local/sbin
 RUN apk add --update --no-cache postgresql-client jpeg-dev
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
 			gcc libc-dev linux-headers postgresql-dev musl-dev zlib zlib-dev

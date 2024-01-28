@@ -22,7 +22,9 @@ services:
       - CORS_ALLOW_ALL_ORIGINS=1
       - DEBUG=1
       - POPULATE_DATA= 1
-      - api-key = bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
+      - producer_api_key=bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
+      - consumer_api_key=ESkNzALn.5IXH6X29ksmrgpqxTRMQ2RQNcMa5t2LJ
+
     depends_on:
       - db
     networks:
@@ -49,7 +51,7 @@ services:
       - "8000:8000"
     command: >
       sh -c "python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000"
+      python manage.py runserver 0.0.0.0:8000 & celery -A consumer.celery worker --loglevel=DEBUG"
     environment:
       - DB_HOST=dbconsumer
       - DB_NAME=app
@@ -60,7 +62,11 @@ services:
       - CORS_ALLOW_ALL_ORIGINS=1
       - DEBUG=1
       - POPULATE_DATA= 1
-      - api-key = bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
+      - CELERY_BROKER=redis://redis:6379
+      - CELERY_BACKEND=redis://redis:6379
+      - producer_api_key=bqGJKDDT.o02MQCO6GpXWG8BsfmSKobLtpqeI8KIg
+      - consumer_api_key=ESkNzALn.5IXH6X29ksmrgpqxTRMQ2RQNcMa5t2LJ
+      - RABBITMQ_URL =amqp://myuser:mypassword@localhost:5672/myvhost
 
     depends_on:
       - dbconsumer
@@ -76,6 +82,38 @@ services:
         POSTGRES_PASSWORD: supersecretpassword
       networks:
         - consumer-network
+  redis:
+    restart: always
+    image: redis:alpine
+    command: redis-server --port 6379 
+    networks:
+      - consumer-network
+
+  celery:
+    restart: always
+    container_name: consumer-celery
+    build:
+      context: .
+      dockerfile: ./Dockerfile.consumer
+    volumes:
+      - ./consumer:/consumer
+    command: >
+      sh -c "
+      celery -A consumer.celery worker -l INFO"
+    environment:
+      DB_HOST: dbconsumer
+      DB_NAME: app
+      DB_USER: postgres
+      DB_PASS: supersecretpassword
+      CELERY_BROKER: redis://redis:6379
+      CELERY_BACKEND: redis://redis:6379
+    depends_on:
+      - consumer
+      - redis
+      - dbconsumer
+    networks:
+      - consumer-network
+
 
 
 networks:
@@ -84,3 +122,5 @@ networks:
 
 volumes:
   static_data:
+
+
