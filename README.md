@@ -31,7 +31,7 @@ To set up this project, you will need to install only Docker and Docker Compose 
 
 1. Clone the repository 
     ```bash
-    git clone https://github.com/Farkito-dev/farkito-hotel-api.git
+    git clone https://github.com/yahyamlaouhi/django-mini-project.git
     ```
 2. Change settings Domain name for Producer and Consumer to you local ip address in both projects
 
