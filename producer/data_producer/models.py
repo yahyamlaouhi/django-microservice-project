@@ -78,3 +78,11 @@ class OrderAPIKey(AbstractAPIKey):
         on_delete=models.CASCADE,
         related_name="api_keys",
     )
+
+
+class TaskResult(models.Model):
+    task_id = models.CharField(max_length=255)
+    result = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"TaskResult {self.task_id}"

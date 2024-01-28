@@ -6,6 +6,13 @@ from rest_framework import serializers
 from .models import Order, OrderItem
 from rest_framework.exceptions import PermissionDenied
 from django.utils import timezone
+from .models import TaskResult
+
+
+class TaskResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaskResult
+        fields = ["task_id", "result"]
 
 
 class OrderItemGetSerializer(serializers.ModelSerializer):
@@ -113,16 +120,6 @@ class OrderPostSerializer(OrderSerializer):
         return instance
 
 
-class OrderUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ("status",)
-
-    def update(self, instance, validated_data):
-        """
-        Update PUT and PATCH for order object
-        """
-        instance.status = validated_data.get("status", instance.status)
-        instance.save()
-
-        return instance
+class OrderUpdateSerializer(serializers.Serializer):
+    taskId = serializers.CharField()
+    status = serializers.CharField()

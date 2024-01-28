@@ -26,8 +26,7 @@ SECRET_KEY = "django-insecure-qd7+(s2k%))23kc^s2s@)%=wqrk8+4z9xb#8h#l^^%!9u+&+f%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -157,3 +156,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CURRENCY = {"tunisia": "TND", "Europe": "EUR", "USA": "USD"}
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+
+PROVIDER_DOMAIN = "http://192.168.1.8:7000"
+CONSUMER_DOMAIN = "http://192.168.1.8:8000"
+
+PRODUCER_API_KEY = os.environ.get("producer_api_key")
+CONSUMER_API_KEY = os.environ.get("consumer_api_key")
