@@ -158,8 +158,8 @@ CURRENCY = {"tunisia": "TND", "Europe": "EUR", "USA": "USD"}
 AUTH_USER_MODEL = "users.CustomUser"
 
 
-PROVIDER_DOMAIN = "http://192.168.1.8:7000"
-CONSUMER_DOMAIN = "http://192.168.1.8:8000"
+PROVIDER_DOMAIN = "your ip using port 7000"
+CONSUMER_DOMAIN = "your ip using port 8000"
 
 PRODUCER_API_KEY = os.environ.get("producer_api_key")
 CONSUMER_API_KEY = os.environ.get("consumer_api_key")
