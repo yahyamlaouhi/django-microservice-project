@@ -158,12 +158,11 @@ API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 
 #  Domains
-PROVIDER_DOMAIN = "http://192.168.1.8:7000"
-CONSUMER_DOMAIN = "http://192.168.1.8:8000"
+PROVIDER_DOMAIN = "your ip using port 7000"
+CONSUMER_DOMAIN = "your ip using port 8000"
 
 # API KEY
 PRODUCER_API_KEY = os.environ.get("producer_api_key")
-print("ffff",PRODUCER_API_KEY)
 CONSUMER_API_KEY = os.environ.get("consumer_api_key")
 
 
